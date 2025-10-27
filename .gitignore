@@ -1,24 +1,19 @@
-# Python / Virtual environment
+# Virtual environment
+.venv/
+venv/
+env/
+
+# Python cache
 __pycache__/
 *.pyc
-*.pyo
-.venv/
-env/
-venv/
 
-# Reports and generated files
-/reports/*.png
-/reports/*.csv
-/reports/*.json
-*.log
+# Data and artifacts
+data/raw/
+data/temp/
+artifacts/
+models/
+reports/
 
-# Model files
-/models/*.h5
-/models/*.pkl
-/models/*.joblib
-
-# OS and IDE junk
-.DS_Store
+# OS files
 Thumbs.db
-.vscode/
-.idea/
+.DS_Store
