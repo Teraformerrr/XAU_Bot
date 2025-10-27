@@ -1,0 +1,24 @@
+# Python / Virtual environment
+__pycache__/
+*.pyc
+*.pyo
+.venv/
+env/
+venv/
+
+# Reports and generated files
+/reports/*.png
+/reports/*.csv
+/reports/*.json
+*.log
+
+# Model files
+/models/*.h5
+/models/*.pkl
+/models/*.joblib
+
+# OS and IDE junk
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/

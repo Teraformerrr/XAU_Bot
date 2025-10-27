@@ -1,0 +1,1 @@
+run dashboard: python -m bot.portfolio.portfolio_dashboard

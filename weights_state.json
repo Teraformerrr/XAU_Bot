@@ -1,0 +1,39 @@
+{
+  "XAUUSD": {
+    "kf_trend": {
+      "ema_acc": 0.6400000000000001,
+      "ema_var": 0.05796,
+      "count": 1,
+      "last_update": 1761602695.956322,
+      "base": 1.0
+    },
+    "ou_revert": {
+      "ema_acc": 0.44000000000000006,
+      "ema_var": 0.06436000000000001,
+      "count": 1,
+      "last_update": 1761602695.957341,
+      "base": 1.0
+    },
+    "stoch_momo": {
+      "ema_acc": 0.6400000000000001,
+      "ema_var": 0.05796,
+      "count": 1,
+      "last_update": 1761602695.9584804,
+      "base": 1.0
+    },
+    "kf_slope": {
+      "ema_acc": 0.6400000000000001,
+      "ema_var": 0.05796,
+      "count": 1,
+      "last_update": 1761602695.957341,
+      "base": 1.0
+    },
+    "ou_zscore": {
+      "ema_acc": 0.44000000000000006,
+      "ema_var": 0.06436000000000001,
+      "count": 1,
+      "last_update": 1761602695.957341,
+      "base": 1.0
+    }
+  }
+}

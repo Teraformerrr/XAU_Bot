@@ -1,0 +1,44 @@
+:root {
+  --bg: #0b0f15;
+  --card: #121826;
+  --text: #e6edf3;
+  --muted: #a0a9b8;
+  --accent: #1f6feb;
+  --win: #16a34a;
+  --loss: #ef4444;
+}
+
+body { background: var(--bg); color: var(--text); font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, Arial; }
+
+h1,h2,h3,h4 { color: var(--text); margin: 8px 0; }
+
+.card {
+  background: var(--card);
+  padding: 14px 16px;
+  border-radius: 16px;
+  box-shadow: 0 6px 24px rgba(0,0,0,.25);
+}
+
+.kpi {
+  display: grid;
+  gap: 12px;
+  grid-template-columns: repeat(4, minmax(180px, 1fr));
+}
+
+.kpi .item { background: var(--card); border-radius: 16px; padding: 14px 16px; }
+.kpi .label { color: var(--muted); font-size: 12px; text-transform: uppercase; letter-spacing: .08em; }
+.kpi .value { font-size: 24px; font-weight: 700; margin-top: 6px; }
+
+.controls { display: flex; gap: 12px; flex-wrap: wrap; align-items: center; margin: 8px 0 16px; }
+.dash-table-container .row { color: var(--text); }
+
+.header-bar .label {
+  font-size: 13px;
+  color: var(--muted);
+  font-weight: 500;
+}
+.header-bar .value {
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--text);
+}

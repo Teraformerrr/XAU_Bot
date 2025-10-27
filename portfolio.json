@@ -1,0 +1,24 @@
+{
+  "portfolio": {
+    "equity": 100125.75,
+    "realized_pnl": 251.5,
+    "unrealized_pnl": 0.0,
+    "win_trades": 2,
+    "loss_trades": 0,
+    "total_trades": 2,
+    "last_update": "2025-10-27T22:32:57.197705"
+  },
+  "trades": [
+    {
+      "symbol": "XAUUSD",
+      "action": "BUY",
+      "confidence": 0.61,
+      "volatility": 0.08,
+      "volume": 1.0,
+      "price": 2385.2,
+      "pnl": 125.75,
+      "status": "SIMULATED",
+      "timestamp": "2025-10-27T22:32:57.197705"
+    }
+  ]
+}

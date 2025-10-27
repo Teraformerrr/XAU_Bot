@@ -1,0 +1,91 @@
+# ==========================================================
+# XAU_Bot — Phase 2 Configuration
+# Includes: MT5 Feed + Indicators + Risk Metrics + Bayesian Confidence Engine
+# ==========================================================
+
+paths:
+  root_dir: "D:\\XAU_Bot"
+  logs_dir: "D:\\XAU_Bot\\logs"
+  data_dir: "D:\\XAU_Bot\\data"
+  models_dir: "D:\\XAU_Bot\\bot\\models"
+  state_dir: "D:\\XAU_Bot\\bot\\state"
+
+# ----------------------------------------------------------
+# MetaTrader 5 Connection
+# ----------------------------------------------------------
+mt5:
+  login: 12345678                # your MT5 login ID
+  password: "your_password_here"
+  server: "Equiti-Demo"
+  path: "C:\\Program Files\\MetaTrader 5\\terminal64.exe"
+  symbols: ["XAUUSD"]
+  timeframe: "M5"
+  lookback_bars: 5000
+  refresh_rate: 60               # seconds
+
+# ----------------------------------------------------------
+# Data Feed Parameters
+# ----------------------------------------------------------
+resample_rule: "1T"        # 1T = 1 minute. You can use "5T" for 5-min bars, etc.
+data_window: 5000          # optional - number of historical points to keep in memory
+fetch_interval: 60         # optional - seconds between MT5 refreshes
+
+
+# ----------------------------------------------------------
+# Indicator Parameters
+# ----------------------------------------------------------
+indicators:
+  ema_periods: [20, 50, 200]
+  rsi_period: 14
+  macd_fast: 12
+  macd_slow: 26
+  macd_signal: 9
+  bb_period: 20
+  bb_stddev: 2
+  atr_period: 14        # ← This one is the key fix
+
+
+# ----------------------------------------------------------
+# Risk Metrics Computation
+# ----------------------------------------------------------
+risk:
+  sharpe_window: 100
+  sortino_window: 100
+  var_confidence: 0.95
+  max_drawdown_window: 200
+
+# ----------------------------------------------------------
+# Bayesian Confidence Engine
+# ----------------------------------------------------------
+bayes:
+  prior_alpha: 50                # base success prior α
+  prior_beta: 50                 # base success prior β
+  signal_alpha: 50               # per-signal α
+  signal_beta: 50                # per-signal β
+  signals: ["kf_trend", "ou_revert", "stoch_momo"]
+
+# ----------------------------------------------------------
+# Trade Policy — Entry Gate for Bayesian Output
+# ----------------------------------------------------------
+trade_policy:
+  min_confidence: 0.68           # posterior threshold for entry
+  min_evidence_strength: 0.60    # total signal strength threshold
+  max_open_positions: 3
+  cooldown_seconds: 30
+
+# ----------------------------------------------------------
+# Logging & Debug
+# ----------------------------------------------------------
+logging:
+  level: "INFO"
+  console: true
+  file: true
+  rotation: 7
+
+
+fusion:
+  min_trade_conf: 0.56     # widen/narrow the HOLD band
+  weights_alpha: 0.2       # EWMA accuracy smoothing
+  weights_beta: 0.1        # EWMA variance smoothing
+  min_weight_floor: 0.05   # keep diversity
+
