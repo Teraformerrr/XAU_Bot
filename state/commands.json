@@ -1,0 +1,18 @@
+{
+  "version": 1,
+  "commands": [
+    {
+      "type": "SET_LOT_SCALE",
+      "value": 0.9816
+    },
+    {
+      "type": "REQUEST_HEDGE",
+      "legs": [
+        {
+          "symbol": "XAUUSD",
+          "lots": 2.0
+        }
+      ]
+    }
+  ]
+}

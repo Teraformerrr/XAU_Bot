@@ -1,0 +1,34 @@
+{
+  "status": "FILLED",
+  "mode": "live",
+  "symbol": "XAUUSD.sd",
+  "action": "BUY",
+  "request": {
+    "action": 1,
+    "symbol": "XAUUSD.sd",
+    "volume": 0.1,
+    "type": 0,
+    "price": 3963.19,
+    "sl": 3959.69,
+    "tp": 3970.19,
+    "deviation": 100,
+    "magic": 51001,
+    "comment": "SCHED_EXEC",
+    "type_time": 0,
+    "type_filling": 1
+  },
+  "response": {
+    "retcode": 10009,
+    "deal": 63719696,
+    "order": 67821606,
+    "price": 3963.19,
+    "comment": "Request executed"
+  },
+  "price": 3963.19,
+  "volume": 0.1,
+  "sl_price": 3959.69,
+  "tp_price": 3970.19,
+  "slippage": 0.0,
+  "latency_ms": 124,
+  "timestamp": "2025-10-28T15:32:14"
+}

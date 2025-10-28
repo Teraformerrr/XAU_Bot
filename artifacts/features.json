@@ -1,0 +1,14 @@
+[
+  "EMA_20",
+  "EMA_50",
+  "EMA_200",
+  "RSI_14",
+  "MACD",
+  "BB_upper",
+  "BB_lower",
+  "ATR",
+  "close",
+  "high",
+  "low",
+  "volume"
+]

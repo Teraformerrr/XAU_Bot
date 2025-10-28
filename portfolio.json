@@ -1,24 +1,46 @@
 {
   "portfolio": {
-    "equity": 100125.75,
-    "realized_pnl": 251.5,
+    "equity": 100000.0,
+    "realized_pnl": 0.0,
     "unrealized_pnl": 0.0,
-    "win_trades": 2,
+    "win_trades": 0,
     "loss_trades": 0,
-    "total_trades": 2,
-    "last_update": "2025-10-27T22:32:57.197705"
+    "total_trades": 3,
+    "last_update": "2025-10-28T10:50:41.783457"
   },
   "trades": [
+    {
+      "symbol": "XAUUSD",
+      "action": "BUY",
+      "confidence": 0.63,
+      "volatility": 0.08,
+      "volume": 1.0,
+      "price": 0.0,
+      "pnl": 0.0,
+      "status": "SIMULATED",
+      "timestamp": "2025-10-28T10:00:39.504134"
+    },
+    {
+      "symbol": "XAUUSD",
+      "action": "BUY",
+      "confidence": 0.67,
+      "volatility": 0.15,
+      "volume": 1.0,
+      "price": 0.0,
+      "pnl": 0.0,
+      "status": "SIMULATED",
+      "timestamp": "2025-10-28T10:43:26.331426"
+    },
     {
       "symbol": "XAUUSD",
       "action": "BUY",
       "confidence": 0.61,
       "volatility": 0.08,
       "volume": 1.0,
-      "price": 2385.2,
-      "pnl": 125.75,
+      "price": 0.0,
+      "pnl": 0.0,
       "status": "SIMULATED",
-      "timestamp": "2025-10-27T22:32:57.197705"
+      "timestamp": "2025-10-28T10:50:41.783457"
     }
   ]
 }

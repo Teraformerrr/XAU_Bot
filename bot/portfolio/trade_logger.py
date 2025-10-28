@@ -1,60 +1,51 @@
 import json
+import os
 from datetime import datetime
 from loguru import logger
-from pathlib import Path
 
-
-def log_trade(symbol, action, confidence, volatility, volume, price, pnl, status, portfolio_state):
+class TradeLogger:
     """
-    Logs a trade entry and updates portfolio.json with the latest portfolio + trade history.
+    Handles trade logging for each executed trade.
+    Supports logging trades to a JSON file and feeding portfolio metrics.
     """
-    trade = {
-        "symbol": symbol,
-        "action": action,
-        "confidence": confidence,
-        "volatility": volatility,
-        "volume": volume,
-        "price": price,
-        "pnl": pnl,
-        "status": status,
-        "timestamp": datetime.utcnow().isoformat()
-    }
 
-    portfolio = {
-        "equity": portfolio_state.get("equity", 0),
-        "realized_pnl": portfolio_state.get("realized_pnl", 0),
-        "unrealized_pnl": portfolio_state.get("unrealized_pnl", 0),
-        "win_trades": portfolio_state.get("win_trades", 0),
-        "loss_trades": portfolio_state.get("loss_trades", 0),
-        "total_trades": portfolio_state.get("total_trades", 0),
-        "last_update": datetime.utcnow().isoformat()
-    }
+    def __init__(self, log_path="reports/trades/trade_log.json"):
+        self.log_path = log_path
+        os.makedirs(os.path.dirname(self.log_path), exist_ok=True)
 
-    output = {
-        "status": "logged",
-        "trade": trade,
-        "portfolio": portfolio
-    }
+    def log_trade(self, symbol: str, action: str, pnl: float = 0.0, equity: float = 0.0):
+        """
+        Logs a trade event.
 
-    # Write to JSON file safely
-    portfolio_file = Path("portfolio.json")
-    try:
-        if portfolio_file.exists():
-            with open(portfolio_file, "r") as f:
-                existing = json.load(f)
+        Args:
+            symbol (str): Instrument traded, e.g., 'XAUUSD'
+            action (str): Trade direction ('BUY' or 'SELL')
+            pnl (float): Profit or loss of the trade
+            equity (float): Current account equity
+        """
+        trade = {
+            "symbol": symbol,
+            "action": action,
+            "pnl": pnl,
+            "equity": equity,
+            "timestamp": datetime.utcnow().isoformat(),
+            "status": "SIMULATED"
+        }
+
+        # Load existing log
+        if os.path.exists(self.log_path):
+            try:
+                with open(self.log_path, "r") as f:
+                    trades = json.load(f)
+            except json.JSONDecodeError:
+                trades = []
         else:
-            existing = {"portfolio": portfolio, "trades": []}
+            trades = []
 
-        existing["portfolio"] = portfolio
-        existing.setdefault("trades", []).append(trade)
+        # Append new trade
+        trades.append(trade)
+        with open(self.log_path, "w") as f:
+            json.dump(trades, f, indent=4)
 
-        with open(portfolio_file, "w") as f:
-            json.dump(existing, f, indent=2)
-
-        logger.info(f"💾 portfolio.json updated successfully | {len(existing['trades'])} trades logged.")
-
-    except Exception as e:
-        logger.error(f"❌ Failed to save portfolio.json: {e}")
-
-    logger.info(f"📘 Trade logged | {symbol} {action} | PnL={pnl} | Equity={portfolio['equity']}")
-    return output
+        logger.info(f"📘 Trade logged | {symbol} {action} | PnL={pnl} | Equity={equity}")
+        return {"status": "logged", "trade": trade}

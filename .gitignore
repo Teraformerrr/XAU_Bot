@@ -1,19 +1,27 @@
-# Virtual environment
-.venv/
-venv/
-env/
+# Environment / secrets
+.env
+config.yaml
 
-# Python cache
+# Python
 __pycache__/
 *.pyc
+*.pyo
+*.pyd
+.venv/
+venv/
+*.log
 
-# Data and artifacts
-data/raw/
-data/temp/
-artifacts/
-models/
+# Data / runtime
+vol_state.json
+bayes_state.json
 reports/
+*.csv
+*.bin
+*.pkl
+*.h5
+*.lstm
+*.xgb
 
-# OS files
-Thumbs.db
-.DS_Store
+# IDEs
+.vscode/
+.idea/

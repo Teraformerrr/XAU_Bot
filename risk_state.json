@@ -1,0 +1,15 @@
+{
+  "timestamp": "2025-10-28T16:48:43.389399",
+  "mode": "paper",
+  "max_drawdown": 0.0,
+  "daily_loss_pct": 0.0,
+  "paused": false,
+  "hedge_requested": false,
+  "policy": {
+    "max_dd_pct": 20.0,
+    "max_risk_per_trade_pct": 2.0,
+    "max_daily_loss_pct": 5.0,
+    "cooldown_minutes": 30
+  },
+  "status": "initialized"
+}

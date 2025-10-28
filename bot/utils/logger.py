@@ -1,30 +1,35 @@
-from rich.console import Console
-from rich.table import Table
-from rich import box
+import logging
+import json
+from logging.handlers import RotatingFileHandler
 
-console = Console()
+def configure_logger(name: str, logfile: str = "reports/system_log.jsonl"):
+    """
+    Configure a structured JSON logger for consistent logging across modules.
+    Automatically creates file if not exists.
+    """
+    logger = logging.getLogger(name)
+    if logger.handlers:
+        return logger  # Already configured
 
+    logger.setLevel(logging.INFO)
 
-def banner(title: str):
-    console.rule(f"[bold cyan]{title}")
+    # JSON formatter
+    class JsonFormatter(logging.Formatter):
+        def format(self, record):
+            log_record = {
+                "level": record.levelname,
+                "name": record.name,
+                "message": record.getMessage(),
+            }
+            return json.dumps(log_record)
 
+    handler = RotatingFileHandler(logfile, maxBytes=2_000_000, backupCount=3)
+    handler.setFormatter(JsonFormatter())
+    logger.addHandler(handler)
 
-def kv(title: str, mapping: dict):
-    table = Table(box=box.MINIMAL_HEAVY_HEAD)
-    table.add_column(title, style="bold")
-    table.add_column("Value")
-    for k, v in mapping.items():
-        table.add_row(str(k), str(v))
-    console.print(table)
+    # Stream to console too
+    console = logging.StreamHandler()
+    console.setFormatter(logging.Formatter("%(asctime)s | %(levelname)s | %(message)s"))
+    logger.addHandler(console)
 
-
-def info(msg: str):
-    console.print(f"[green]INFO[/]: {msg}")
-
-
-def warn(msg: str):
-    console.print(f"[yellow]WARN[/]: {msg}")
-
-
-def error(msg: str):
-    console.print(f"[red]ERROR[/]: {msg}")
+    return logger

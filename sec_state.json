@@ -1,0 +1,478 @@
+[
+  {
+    "timestamp": "2025-10-28T14:33:55",
+    "module": "SEC",
+    "status": "APPROVED",
+    "symbol": "XAUUSD",
+    "action": "BUY",
+    "requested_lots": 2.0,
+    "approved_lots": 2.0,
+    "confidence": 0.62,
+    "volatility": 0.12,
+    "reasons": [
+      "\u2705 Approved | headroom=6.52 lots",
+      "net 0.00/10.86 | XAUUSD 0.00/6.52"
+    ],
+    "factors": {
+      "risk_cut": 1.0,
+      "vol_scale": 0.952,
+      "conf_scale": 1.141,
+      "hedge_scale": 1.0,
+      "final_scale": 1.0862
+    }
+  },
+  {
+    "timestamp": "2025-10-28T14:33:55",
+    "module": "SEC",
+    "status": "SCALED",
+    "symbol": "XAUUSD",
+    "action": "BUY",
+    "requested_lots": 2.0,
+    "approved_lots": 0.8,
+    "confidence": 0.7,
+    "volatility": 0.18,
+    "reasons": [
+      "\u2702\ufe0f Scaled from 2.00 \u2192 0.80 | headroom=0.80",
+      "net 5.80/11.00 | XAUUSD 5.80/6.60"
+    ],
+    "factors": {
+      "risk_cut": 1.0,
+      "vol_scale": 0.928,
+      "conf_scale": 1.185,
+      "hedge_scale": 1.0,
+      "final_scale": 1.0997
+    }
+  },
+  {
+    "timestamp": "2025-10-28T14:33:55",
+    "module": "SEC",
+    "status": "SCALED",
+    "symbol": "XAUUSD",
+    "action": "BUY",
+    "requested_lots": 4.0,
+    "approved_lots": 2.07,
+    "confidence": 0.55,
+    "volatility": 0.3,
+    "reasons": [
+      "\u2702\ufe0f Scaled from 4.00 \u2192 2.07 | headroom=2.07",
+      "net 2.00/6.79 | XAUUSD 2.00/4.07"
+    ],
+    "factors": {
+      "risk_cut": 0.7,
+      "vol_scale": 0.88,
+      "conf_scale": 1.1025,
+      "hedge_scale": 1.0,
+      "final_scale": 0.6791
+    }
+  },
+  {
+    "timestamp": "2025-10-28T14:33:55",
+    "module": "SEC",
+    "status": "SCALED",
+    "symbol": "XAUUSD",
+    "action": "BUY",
+    "requested_lots": 4.0,
+    "approved_lots": 2.74,
+    "confidence": 0.6,
+    "volatility": 0.2,
+    "reasons": [
+      "\u2702\ufe0f Scaled from 4.00 \u2192 2.74 | headroom=2.74",
+      "net 1.00/6.24 | XAUUSD 1.00/3.74"
+    ],
+    "factors": {
+      "risk_cut": 1.0,
+      "vol_scale": 0.92,
+      "conf_scale": 1.13,
+      "hedge_scale": 0.6,
+      "final_scale": 0.6238
+    }
+  },
+  {
+    "timestamp": "2025-10-28T14:33:55",
+    "module": "SEC",
+    "status": "DENIED",
+    "symbol": "XAUUSD",
+    "action": "BUY",
+    "requested_lots": 1.0,
+    "approved_lots": 0.0,
+    "confidence": 0.7,
+    "volatility": 0.1,
+    "reasons": [
+      "\ud83e\uddef Margin guard tripped: free_margin/equity=0.100 < 0.15"
+    ]
+  },
+  {
+    "timestamp": "2025-10-28T15:06:06",
+    "module": "SEC",
+    "status": "APPROVED",
+    "symbol": "XAUUSD",
+    "action": "SELL",
+    "requested_lots": 0.1,
+    "approved_lots": 0.1,
+    "confidence": 0.87,
+    "volatility": 0.16,
+    "reasons": [
+      "\u2705 Approved | headroom=11.97 lots",
+      "net 0.00/23.93 | XAUUSD 0.00/11.97"
+    ],
+    "factors": {
+      "risk_cut": 1.0,
+      "vol_scale": 0.936,
+      "conf_scale": 1.2785,
+      "hedge_scale": 1.0,
+      "final_scale": 1.1967
+    }
+  },
+  {
+    "timestamp": "2025-10-28T15:07:06",
+    "module": "SEC",
+    "status": "APPROVED",
+    "symbol": "XAUUSD",
+    "action": "BUY",
+    "requested_lots": 0.1,
+    "approved_lots": 0.1,
+    "confidence": 0.68,
+    "volatility": 0.15,
+    "reasons": [
+      "\u2705 Approved | headroom=11.04 lots",
+      "net 0.00/22.07 | XAUUSD 0.00/11.04"
+    ],
+    "factors": {
+      "risk_cut": 1.0,
+      "vol_scale": 0.94,
+      "conf_scale": 1.174,
+      "hedge_scale": 1.0,
+      "final_scale": 1.1036
+    }
+  },
+  {
+    "timestamp": "2025-10-28T15:08:06",
+    "module": "SEC",
+    "status": "APPROVED",
+    "symbol": "XAUUSD",
+    "action": "SELL",
+    "requested_lots": 0.1,
+    "approved_lots": 0.1,
+    "confidence": 0.86,
+    "volatility": 0.07,
+    "reasons": [
+      "\u2705 Approved | headroom=12.37 lots",
+      "net 0.00/24.75 | XAUUSD 0.00/12.37"
+    ],
+    "factors": {
+      "risk_cut": 1.0,
+      "vol_scale": 0.972,
+      "conf_scale": 1.273,
+      "hedge_scale": 1.0,
+      "final_scale": 1.2374
+    }
+  },
+  {
+    "timestamp": "2025-10-28T15:11:47",
+    "module": "SEC",
+    "status": "APPROVED",
+    "symbol": "XAUUSD",
+    "action": "BUY",
+    "requested_lots": 0.1,
+    "approved_lots": 0.1,
+    "confidence": 0.79,
+    "volatility": 0.21,
+    "reasons": [
+      "\u2705 Approved | headroom=11.31 lots",
+      "net 0.00/22.62 | XAUUSD 0.00/11.31"
+    ],
+    "factors": {
+      "risk_cut": 1.0,
+      "vol_scale": 0.916,
+      "conf_scale": 1.2345,
+      "hedge_scale": 1.0,
+      "final_scale": 1.1308
+    }
+  },
+  {
+    "timestamp": "2025-10-28T15:12:47",
+    "module": "SEC",
+    "status": "APPROVED",
+    "symbol": "XAUUSD",
+    "action": "BUY",
+    "requested_lots": 0.1,
+    "approved_lots": 0.1,
+    "confidence": 0.86,
+    "volatility": 0.06,
+    "reasons": [
+      "\u2705 Approved | headroom=12.42 lots",
+      "net 0.00/24.85 | XAUUSD 0.00/12.42"
+    ],
+    "factors": {
+      "risk_cut": 1.0,
+      "vol_scale": 0.976,
+      "conf_scale": 1.273,
+      "hedge_scale": 1.0,
+      "final_scale": 1.2424
+    }
+  },
+  {
+    "timestamp": "2025-10-28T15:13:47",
+    "module": "SEC",
+    "status": "APPROVED",
+    "symbol": "XAUUSD",
+    "action": "BUY",
+    "requested_lots": 0.1,
+    "approved_lots": 0.1,
+    "confidence": 0.83,
+    "volatility": 0.14,
+    "reasons": [
+      "\u2705 Approved | headroom=11.86 lots",
+      "net 0.00/23.72 | XAUUSD 0.00/11.86"
+    ],
+    "factors": {
+      "risk_cut": 1.0,
+      "vol_scale": 0.944,
+      "conf_scale": 1.2565,
+      "hedge_scale": 1.0,
+      "final_scale": 1.1861
+    }
+  },
+  {
+    "timestamp": "2025-10-28T15:14:47",
+    "module": "SEC",
+    "status": "APPROVED",
+    "symbol": "XAUUSD",
+    "action": "SELL",
+    "requested_lots": 0.1,
+    "approved_lots": 0.1,
+    "confidence": 0.86,
+    "volatility": 0.12,
+    "reasons": [
+      "\u2705 Approved | headroom=12.12 lots",
+      "net 0.00/24.24 | XAUUSD 0.00/12.12"
+    ],
+    "factors": {
+      "risk_cut": 1.0,
+      "vol_scale": 0.952,
+      "conf_scale": 1.273,
+      "hedge_scale": 1.0,
+      "final_scale": 1.2119
+    }
+  },
+  {
+    "timestamp": "2025-10-28T15:15:22",
+    "module": "SEC",
+    "status": "APPROVED",
+    "symbol": "XAUUSD",
+    "action": "BUY",
+    "requested_lots": 0.1,
+    "approved_lots": 0.1,
+    "confidence": 0.88,
+    "volatility": 0.22,
+    "reasons": [
+      "\u2705 Approved | headroom=11.71 lots",
+      "net 0.00/23.42 | XAUUSD 0.00/11.71"
+    ],
+    "factors": {
+      "risk_cut": 1.0,
+      "vol_scale": 0.912,
+      "conf_scale": 1.284,
+      "hedge_scale": 1.0,
+      "final_scale": 1.171
+    }
+  },
+  {
+    "timestamp": "2025-10-28T15:16:22",
+    "module": "SEC",
+    "status": "APPROVED",
+    "symbol": "XAUUSD",
+    "action": "BUY",
+    "requested_lots": 0.1,
+    "approved_lots": 0.1,
+    "confidence": 0.84,
+    "volatility": 0.08,
+    "reasons": [
+      "\u2705 Approved | headroom=12.22 lots",
+      "net 0.00/24.43 | XAUUSD 0.00/12.22"
+    ],
+    "factors": {
+      "risk_cut": 1.0,
+      "vol_scale": 0.968,
+      "conf_scale": 1.262,
+      "hedge_scale": 1.0,
+      "final_scale": 1.2216
+    }
+  },
+  {
+    "timestamp": "2025-10-28T15:17:22",
+    "module": "SEC",
+    "status": "APPROVED",
+    "symbol": "XAUUSD",
+    "action": "BUY",
+    "requested_lots": 0.1,
+    "approved_lots": 0.1,
+    "confidence": 0.9,
+    "volatility": 0.19,
+    "reasons": [
+      "\u2705 Approved | headroom=11.97 lots",
+      "net 0.00/23.93 | XAUUSD 0.00/11.97"
+    ],
+    "factors": {
+      "risk_cut": 1.0,
+      "vol_scale": 0.924,
+      "conf_scale": 1.295,
+      "hedge_scale": 1.0,
+      "final_scale": 1.1966
+    }
+  },
+  {
+    "timestamp": "2025-10-28T15:22:20",
+    "module": "SEC",
+    "status": "APPROVED",
+    "symbol": "XAUUSD",
+    "action": "BUY",
+    "requested_lots": 0.1,
+    "approved_lots": 0.1,
+    "confidence": 0.91,
+    "volatility": 0.09,
+    "reasons": [
+      "\u2705 Approved | headroom=12.54 lots",
+      "net 0.00/25.07 | XAUUSD 0.00/12.54"
+    ],
+    "factors": {
+      "risk_cut": 1.0,
+      "vol_scale": 0.964,
+      "conf_scale": 1.3005,
+      "hedge_scale": 1.0,
+      "final_scale": 1.2537
+    }
+  },
+  {
+    "timestamp": "2025-10-28T15:23:20",
+    "module": "SEC",
+    "status": "APPROVED",
+    "symbol": "XAUUSD",
+    "action": "SELL",
+    "requested_lots": 0.1,
+    "approved_lots": 0.1,
+    "confidence": 0.91,
+    "volatility": 0.17,
+    "reasons": [
+      "\u2705 Approved | headroom=12.12 lots",
+      "net 0.00/24.24 | XAUUSD 0.00/12.12"
+    ],
+    "factors": {
+      "risk_cut": 1.0,
+      "vol_scale": 0.932,
+      "conf_scale": 1.3005,
+      "hedge_scale": 1.0,
+      "final_scale": 1.2121
+    }
+  },
+  {
+    "timestamp": "2025-10-28T15:24:20",
+    "module": "SEC",
+    "status": "APPROVED",
+    "symbol": "XAUUSD",
+    "action": "SELL",
+    "requested_lots": 0.1,
+    "approved_lots": 0.1,
+    "confidence": 0.77,
+    "volatility": 0.08,
+    "reasons": [
+      "\u2705 Approved | headroom=11.84 lots",
+      "net 0.00/23.69 | XAUUSD 0.00/11.84"
+    ],
+    "factors": {
+      "risk_cut": 1.0,
+      "vol_scale": 0.968,
+      "conf_scale": 1.2235,
+      "hedge_scale": 1.0,
+      "final_scale": 1.1843
+    }
+  },
+  {
+    "timestamp": "2025-10-28T15:25:22",
+    "module": "SEC",
+    "status": "APPROVED",
+    "symbol": "XAUUSD.sd",
+    "action": "SELL",
+    "requested_lots": 0.1,
+    "approved_lots": 0.1,
+    "confidence": 0.71,
+    "volatility": 0.12,
+    "reasons": [
+      "\u2705 Approved | headroom=11.33 lots",
+      "net 0.00/22.67 | XAUUSD.sd 0.00/11.33"
+    ],
+    "factors": {
+      "risk_cut": 1.0,
+      "vol_scale": 0.952,
+      "conf_scale": 1.1905,
+      "hedge_scale": 1.0,
+      "final_scale": 1.1334
+    }
+  },
+  {
+    "timestamp": "2025-10-28T15:26:22",
+    "module": "SEC",
+    "status": "APPROVED",
+    "symbol": "XAUUSD.sd",
+    "action": "SELL",
+    "requested_lots": 0.1,
+    "approved_lots": 0.1,
+    "confidence": 0.77,
+    "volatility": 0.07,
+    "reasons": [
+      "\u2705 Approved | headroom=11.89 lots",
+      "net 0.00/23.78 | XAUUSD.sd 0.00/11.89"
+    ],
+    "factors": {
+      "risk_cut": 1.0,
+      "vol_scale": 0.972,
+      "conf_scale": 1.2235,
+      "hedge_scale": 1.0,
+      "final_scale": 1.1892
+    }
+  },
+  {
+    "timestamp": "2025-10-28T15:32:14",
+    "module": "SEC",
+    "status": "APPROVED",
+    "symbol": "XAUUSD.sd",
+    "action": "BUY",
+    "requested_lots": 0.1,
+    "approved_lots": 0.1,
+    "confidence": 0.84,
+    "volatility": 0.08,
+    "reasons": [
+      "\u2705 Approved | headroom=12.22 lots",
+      "net 0.00/24.43 | XAUUSD.sd 0.00/12.22"
+    ],
+    "factors": {
+      "risk_cut": 1.0,
+      "vol_scale": 0.968,
+      "conf_scale": 1.262,
+      "hedge_scale": 1.0,
+      "final_scale": 1.2216
+    }
+  },
+  {
+    "timestamp": "2025-10-28T15:33:14",
+    "module": "SEC",
+    "status": "APPROVED",
+    "symbol": "XAUUSD.sd",
+    "action": "SELL",
+    "requested_lots": 0.1,
+    "approved_lots": 0.1,
+    "confidence": 0.77,
+    "volatility": 0.06,
+    "reasons": [
+      "\u2705 Approved | headroom=11.94 lots",
+      "net 0.00/23.88 | XAUUSD.sd 0.00/11.94"
+    ],
+    "factors": {
+      "risk_cut": 1.0,
+      "vol_scale": 0.976,
+      "conf_scale": 1.2235,
+      "hedge_scale": 1.0,
+      "final_scale": 1.1941
+    }
+  }
+]

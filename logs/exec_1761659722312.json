@@ -1,0 +1,24 @@
+{
+  "status": "SIMULATED",
+  "mode": "paper",
+  "symbol": "XAUUSD",
+  "action": "BUY",
+  "request": {
+    "mode": "paper",
+    "symbol": "XAUUSD",
+    "action": "BUY",
+    "volume": 0.1,
+    "comment": "SEE_SMOKE"
+  },
+  "response": {
+    "fill_price": 2385.0,
+    "ticket": "SIM-1761659722312"
+  },
+  "price": 2385.0,
+  "volume": 0.1,
+  "sl_price": null,
+  "tp_price": null,
+  "slippage": 0.0,
+  "latency_ms": 10,
+  "timestamp": "2025-10-28T13:55:22"
+}

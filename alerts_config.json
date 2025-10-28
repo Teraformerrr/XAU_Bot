@@ -1,0 +1,8 @@
+{
+  "pnl_warn_low_usd": -500.0,
+  "pnl_target_high_usd": 1000.0,
+  "max_drawdown_pct": -5.0,
+  "risk_pct_high": 5.0,
+  "margin_used_high": 50.0,
+  "win_rate_low_pct": 40.0
+}

@@ -1,0 +1,14 @@
+{
+  "equity": 100000.0,
+  "max_drawdown_pct": 0.05,
+  "open_exposure_pct": 0.1,
+  "margin_level": 300.0,
+  "model_confidence_avg": 0.6,
+  "open_positions": [
+    {
+      "symbol": "XAUUSD",
+      "lots": 2.0,
+      "loss_pct": 0.27
+    }
+  ]
+}

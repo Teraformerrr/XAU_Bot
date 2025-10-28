@@ -1,0 +1,6 @@
+{
+  "version": 1,
+  "commands": [
+    {"type": "REQUEST_HEDGE", "legs": [{"symbol": "XAUUSD", "lots": 2.0}]}
+  ]
+}

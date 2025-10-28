@@ -1,0 +1,7 @@
+{
+  "paused": false,
+  "lot_scale": 1.0,
+  "hedge_lots_in_use": 2.0,
+  "timestamp": "2025-10-28T18:21:09",
+  "policy": { ... }
+}

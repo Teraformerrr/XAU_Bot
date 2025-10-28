@@ -1,0 +1,32 @@
+{
+  "status": "REJECTED",
+  "mode": "live",
+  "symbol": "XAUUSD",
+  "action": "SELL",
+  "request": {
+    "action": 1,
+    "symbol": "XAUUSD",
+    "volume": 0.1,
+    "type": 1,
+    "price": 3959.0,
+    "deviation": 50,
+    "magic": 51001,
+    "comment": "SCHED_EXEC",
+    "type_time": 0,
+    "type_filling": 1
+  },
+  "response": {
+    "retcode": 10017,
+    "deal": 0,
+    "order": 0,
+    "price": 0.0,
+    "comment": "Trade disabled"
+  },
+  "price": 0.0,
+  "volume": 0.1,
+  "sl_price": null,
+  "tp_price": null,
+  "slippage": 0.0,
+  "latency_ms": 0,
+  "timestamp": "2025-10-28T15:24:20"
+}

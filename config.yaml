@@ -1,139 +1,16 @@
-# ==========================================================
-# XAU_Bot — Phase 2 Configuration
-# Includes: MT5 Feed + Indicators + Risk Metrics + Bayesian Confidence Engine
-# ==========================================================
+# D:\XAU_Bot\config.yaml
+execution:
+  mode: live               # must be "live" for demo trading
+  magic: 51001
+  max_retries: 2
+  default_slippage_pts: 100
+  heartbeat_pipe: runtime/execution_heartbeat.json
 
-paths:
-  root_dir: "D:\\XAU_Bot"
-  logs_dir: "D:\\XAU_Bot\\logs"
-  data_dir: "D:\\XAU_Bot\\data"
-  models_dir: "D:\\XAU_Bot\\bot\\models"
-  state_dir: "D:\\XAU_Bot\\bot\\state"
+engine:
+  bar_seconds: 60
 
-# ----------------------------------------------------------
-# MetaTrader 5 Connection
-# ----------------------------------------------------------
-mt5:
-  login: 12345678                # your MT5 login ID
-  password: "your_password_here"
-  server: "Equiti-Demo"
-  path: "C:\\Program Files\\MetaTrader 5\\terminal64.exe"
-  symbols: ["XAUUSD"]
-  timeframe: "M5"
-  lookback_bars: 5000
-  refresh_rate: 60               # seconds
-
-# ----------------------------------------------------------
-# Data Feed Parameters
-# ----------------------------------------------------------
-resample_rule: "1T"        # 1T = 1 minute. You can use "5T" for 5-min bars, etc.
-data_window: 5000          # optional - number of historical points to keep in memory
-fetch_interval: 60         # optional - seconds between MT5 refreshes
-
-
-# ----------------------------------------------------------
-# Indicator Parameters
-# ----------------------------------------------------------
-indicators:
-  ema_periods: [20, 50, 200]
-  rsi_period: 14
-  macd_fast: 12
-  macd_slow: 26
-  macd_signal: 9
-  bb_period: 20
-  bb_stddev: 2
-  atr_period: 14        # ← This one is the key fix
-
-
-# ----------------------------------------------------------
-# Risk Metrics Computation
-# ----------------------------------------------------------
+symbols:
+  metals: ["XAUUSD.sd"] 
 risk:
-  sharpe_window: 100
-  sortino_window: 100
-  var_confidence: 0.95
-  max_drawdown_window: 200
-
-# ----------------------------------------------------------
-# Bayesian Confidence Engine
-# ----------------------------------------------------------
-bayes:
-  prior_alpha: 50                # base success prior α
-  prior_beta: 50                 # base success prior β
-  signal_alpha: 50               # per-signal α
-  signal_beta: 50                # per-signal β
-  signals: ["kf_trend", "ou_revert", "stoch_momo"]
-
-# ----------------------------------------------------------
-# Trade Policy — Entry Gate for Bayesian Output
-# ----------------------------------------------------------
-trade_policy:
-  min_confidence: 0.68           # posterior threshold for entry
-  min_evidence_strength: 0.60    # total signal strength threshold
-  max_open_positions: 3
-  cooldown_seconds: 30
-
-# ----------------------------------------------------------
-# Logging & Debug
-# ----------------------------------------------------------
-logging:
-  level: "INFO"
-  console: true
-  file: true
-  rotation: 7
-
-
-fusion:
-  min_trade_conf: 0.56     # widen/narrow the HOLD band
-  weights_alpha: 0.2       # EWMA accuracy smoothing
-  weights_beta: 0.1        # EWMA variance smoothing
-  min_weight_floor: 0.05   # keep diversity
-
-training:
-  data_path: "data/processed/xauusd_5m.csv"
-  symbol: "XAUUSD"
-  timeframe: "5m"
-
-  label:
-    horizon_bars: 6
-    threshold_pct: 0.10
-
-  features:
-    include:
-      - EMA_20
-      - EMA_50
-      - EMA_200
-      - RSI_14
-      - MACD
-      - BB_upper
-      - BB_lower
-      - ATR
-      - close
-      - high
-      - low
-      - volume
-    normalize: true
-
-  split:
-    train_ratio: 0.70
-    val_ratio: 0.15
-    test_ratio: 0.15
-    shuffle: false
-
-  trainer:
-    name: "xgb_classifier"
-    params:
-      n_estimators: 400
-      max_depth: 6
-      learning_rate: 0.05
-      subsample: 0.9
-      colsample_bytree: 0.9
-      reg_lambda: 1.0
-      tree_method: "hist"
-
-  output:
-    model_dir: "models/xgb"
-    artifacts_dir: "artifacts"
-    report_dir: "reports/training"
-    model_name: "xgb_xauusd_5m.bin"
-
+  sl_atr_mult: 1.5
+  tp_atr_mult: 2.2

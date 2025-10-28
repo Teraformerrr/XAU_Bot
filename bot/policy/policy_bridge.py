@@ -1,86 +1,45 @@
-# D:\XAU_Bot\bot\policy\policy_bridge.py
-import json
-import logging
-from pathlib import Path
+"""
+policy_bridge.py
+Phase 5 – Policy Decision Bridge
+Connects AI/Rule-based signal logic with the Scheduler.
+"""
+
+import random
 from datetime import datetime
-
-logging.basicConfig(
-    format="%(asctime)s | %(levelname)-8s | %(message)s",
-    level=logging.INFO,
-    datefmt="%Y-%m-%d %H:%M:%S"
-)
+from loguru import logger
 
 
-class PolicyBridge:
+def get_policy_decision(symbol: str) -> dict:
     """
-    Connects Bayesian Policy output → actionable trade command.
+    Returns a policy decision for the given symbol.
+    This is a placeholder AI logic (demo mode).
     """
 
-    def __init__(self, decision_file="bayes_policy_output.json",
-                 min_conf=0.55, max_vol=0.25):
-        self.decision_file = Path(decision_file)
-        self.min_conf = min_conf
-        self.max_vol = max_vol
+    # Simulate model confidence and volatility
+    confidence = round(random.uniform(0.3, 0.95), 2)
+    volatility = round(random.uniform(0.05, 0.4), 2)
 
-    def load_decision(self):
-        if not self.decision_file.exists():
-            logging.error(f"Decision file {self.decision_file} not found.")
-            return None
+    # Demo: occasionally force a trade
+    forced = random.random() > 0.65
+    execute = forced or confidence > 0.85
 
-        with open(self.decision_file, "r") as f:
-            data = json.load(f)
-        return data
+    action = "BUY" if random.random() > 0.5 else "SELL"
+    reason = "forced-demo" if forced else "demo-idle"
 
-    def validate_signal(self, decision):
-        conf = decision.get("confidence", 0)
-        vol = decision.get("volatility", 1)
-        drift = decision.get("drift", False)
+    decision = {
+        "symbol": symbol,
+        "execute": True,  # force trade
+        "action": random.choice(["BUY", "SELL"]),
+        "confidence": round(random.uniform(0.8, 0.95), 2),
+        "volatility": round(random.uniform(0.1, 0.3), 2),
+        "reason": "forced-demo",
+        "timestamp": datetime.utcnow().isoformat(),
+    }
 
-        if conf < self.min_conf:
-            reason = f"❌ Rejected: low confidence ({conf:.2f})"
-            return False, reason
-        if vol > self.max_vol:
-            reason = f"❌ Rejected: high volatility ({vol:.2f})"
-            return False, reason
-        if drift:
-            reason = "⚠️ Drift detected — waiting for stabilization"
-            return False, reason
-
-        return True, "✅ Valid signal"
-
-    def translate_action(self, decision):
-        action = decision.get("action", "HOLD").upper()
-        conf = decision.get("confidence", 0)
-        valid, reason = self.validate_signal(decision)
-
-        if not valid:
-            logging.warning(reason)
-            return {"execute": False, "reason": reason, "decision": action}
-
-        if action in ["BUY", "SELL"]:
-            cmd = {
-                "execute": True,
-                "action": action,
-                "timestamp": datetime.utcnow().isoformat(),
-                "confidence": conf,
-                "volatility": decision.get("volatility"),
-                "thresholds": (decision.get("buy_threshold"),
-                               decision.get("sell_threshold"))
-            }
-            logging.info(f"📤 Execution Trigger → {cmd}")
-            return cmd
-
-        logging.info(f"⏸ No action → {action}")
-        return {"execute": False, "reason": "Hold/No action"}
-
-    def run(self):
-        decision = self.load_decision()
-        if not decision:
-            return {"execute": False, "reason": "Missing decision file"}
-        return self.translate_action(decision)
+    logger.debug(f"Policy Bridge Decision → {decision}")
+    return decision
 
 
+# Standalone test
 if __name__ == "__main__":
-    bridge = PolicyBridge()
-    result = bridge.run()
-    print(result)
+    print(get_policy_decision("XAUUSD"))

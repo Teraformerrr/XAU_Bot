@@ -58,106 +58,217 @@ class MT5Feed:
     # ============================================================
     def fetch_ticks(self, symbol: str, minutes: int = 1) -> pd.DataFrame:
         """
-        Fetches recent ticks for the symbol.
+        Fetches recent ticks for the symbol using broker/server time.
+        Falls back to UTC if MT5 server time unavailable.
         """
-        now = datetime.utcnow()
+        info = mt5.symbol_info_tick(symbol)
+        if info is None:
+            raise ValueError(f"Symbol {symbol} not found or inactive in MT5.")
+
+        # use MT5 server time if available
+        now = datetime.fromtimestamp(info.time, tz=None)
         frm = now - timedelta(minutes=minutes)
+
         ticks = mt5.copy_ticks_range(symbol, frm, now, mt5.COPY_TICKS_ALL)
         if ticks is None or len(ticks) == 0:
-            raise ValueError(f"No tick data returned for {symbol}")
+            raise ValueError(f"No tick data returned for {symbol} between {frm} and {now}")
+
         df = pd.DataFrame(ticks)
-        df["time"] = pd.to_datetime(df["time"], unit="s", utc=True)
-        df = df.set_index("time")
+        df["time"] = pd.to_datetime(df["time"], unit="s")
+        df.set_index("time", inplace=True)
         return df
 
     def ticks_to_bars(self, tick_df: pd.DataFrame) -> pd.DataFrame:
         """
-        Resamples tick data into OHLCV bars.
+        Convert tick-level data into OHLCV bars safely.
+        Handles bid/ask/last-only data and normalizes timestamps.
         """
-        price_series = tick_df["bid"]
-        rule = self.resample_rule
+        import pandas as pd
+
+        if tick_df.empty:
+            print("⚠️ Tick dataframe is empty — cannot convert to bars.")
+            return pd.DataFrame()
+
+        # --- Detect price column dynamically ---
+        price_col = None
+        for col in ["bid", "ask", "last"]:
+            if col in tick_df.columns:
+                price_col = col
+                break
+        if price_col is None:
+            raise ValueError("No bid/ask/last column found in tick data.")
+
+        # --- Ensure time index is proper datetime in UTC ---
+        if not pd.api.types.is_datetime64_any_dtype(tick_df.index):
+            if "time" in tick_df.columns:
+                tick_df["time"] = pd.to_datetime(tick_df["time"], unit="s", utc=True)
+                tick_df.set_index("time", inplace=True)
+            else:
+                raise ValueError("No time column found in tick data.")
+        else:
+            tick_df.index = pd.to_datetime(tick_df.index, utc=True)
+
+        # --- Sort and remove duplicates ---
+        tick_df = tick_df[~tick_df.index.duplicated(keep="last")].sort_index()
+
+        # --- Normalize to 1-second precision ---
+        tick_df.index = tick_df.index.floor("S")
+
+        # --- Resample safely to 1-minute OHLC bars ---
+        rule = self.resample_rule if hasattr(self, "resample_rule") else "1min"
+        price_series = tick_df[price_col]
         o = price_series.resample(rule).first()
         h = price_series.resample(rule).max()
         l = price_series.resample(rule).min()
         c = price_series.resample(rule).last()
-        v = tick_df.get("volume", pd.Series(0, index=c.index)).resample(rule).sum()
-        df = pd.concat([o, h, l, c, v], axis=1)
-        df.columns = ["open", "high", "low", "close", "volume"]
-        df.dropna(inplace=True)
-        return df
+
+        # --- Volume aggregation ---
+        if "volume" in tick_df.columns:
+            v = tick_df["volume"].resample(rule).sum()
+        else:
+            v = pd.Series(0, index=c.index)
+
+        bars = pd.concat([o, h, l, c, v], axis=1)
+        bars.columns = ["open", "high", "low", "close", "volume"]
+        bars.dropna(inplace=True)
+
+        print(f"✅ Converted {len(tick_df)} ticks → {len(bars)} bars ({rule})")
+        return bars
 
     # ============================================================
     # Indicator Calculations
     # ============================================================
     def add_indicators(self, df: pd.DataFrame, cfg: dict) -> pd.DataFrame:
         """
-        Adds EMA, RSI, MACD, Bollinger Bands, ATR indicators.
+        Add technical indicators safely without dropping short datasets.
         """
+        import ta  # technical analysis library
+        import numpy as np
+
         if df.empty:
-            raise ValueError("DataFrame is empty, cannot add indicators.")
+            print("⚠️ Empty DataFrame received in add_indicators()")
+            return df
 
-        # --- Safe indicator configuration lookup ---
-        ind_cfg = cfg.get("indicators", {})
+        df = df.copy()
 
-        ema_periods = ind_cfg.get("ema_periods", [20, 50, 200])
-        ema_fast = ind_cfg.get("ema_fast", ema_periods[0])
-        ema_slow = ind_cfg.get("ema_slow", ema_periods[1])
-        ema_long = ind_cfg.get("ema_long", ema_periods[2])
+        # --- Core EMAs ---
+        for p in [20, 50, 200]:
+            try:
+                df[f"EMA_{p}"] = df["close"].ewm(span=p, adjust=False).mean()
+            except Exception as e:
+                print(f"⚠️ EMA({p}) failed: {e}")
+                df[f"EMA_{p}"] = np.nan
 
-        rsi_period = ind_cfg.get("rsi_period", cfg.get("rsi_period", 14))
-        macd_fast = ind_cfg.get("macd_fast", cfg.get("macd_fast", 12))
-        macd_slow = ind_cfg.get("macd_slow", cfg.get("macd_slow", 26))
-        macd_signal = ind_cfg.get("macd_signal", cfg.get("macd_signal", 9))
-        bb_period = ind_cfg.get("bb_period", cfg.get("bb_period", 20))
-        bb_stddev = ind_cfg.get("bb_stddev", cfg.get("bb_stddev", 2))
-        atr_period = ind_cfg.get("atr_period", cfg.get("atr_period", 14))
+        # --- RSI ---
+        try:
+            df["RSI_14"] = ta.momentum.RSIIndicator(df["close"], window=14).rsi()
+        except Exception as e:
+            print("⚠️ RSI failed:", e)
+            df["RSI_14"] = np.nan
 
-        # --- Compute indicators ---
-        df["EMA_Fast"] = EMAIndicator(df["close"], window=ema_fast).ema_indicator()
-        df["EMA_Slow"] = EMAIndicator(df["close"], window=ema_slow).ema_indicator()
-        df["EMA_Long"] = EMAIndicator(df["close"], window=ema_long).ema_indicator()
+        # --- MACD ---
+        try:
+            macd = ta.trend.MACD(df["close"])
+            df["MACD"] = macd.macd()
+            df["MACD_Signal"] = macd.macd_signal()
+            df["MACD_Hist"] = macd.macd_diff()
+        except Exception as e:
+            print("⚠️ MACD failed:", e)
+            df["MACD"] = df["MACD_Signal"] = df["MACD_Hist"] = np.nan
 
-        df["RSI"] = RSIIndicator(df["close"], window=rsi_period).rsi()
+        # --- Bollinger Bands ---
+        try:
+            bb = ta.volatility.BollingerBands(df["close"], window=20, window_dev=2)
+            df["BB_Mid"] = bb.bollinger_mavg()
+            df["BB_Upper"] = bb.bollinger_hband()
+            df["BB_Lower"] = bb.bollinger_lband()
+        except Exception as e:
+            print("⚠️ Bollinger Bands failed:", e)
+            df["BB_Mid"] = df["BB_Upper"] = df["BB_Lower"] = np.nan
 
-        macd_calc = MACD(
-            df["close"],
-            window_slow=macd_slow,
-            window_fast=macd_fast,
-            window_sign=macd_signal,
-        )
-        df["MACD"] = macd_calc.macd()
-        df["MACD_Signal"] = macd_calc.macd_signal()
-        df["MACD_Hist"] = macd_calc.macd_diff()
+        # --- ATR ---
+        try:
+            df["ATR"] = ta.volatility.AverageTrueRange(
+                high=df["high"], low=df["low"], close=df["close"], window=14
+            ).average_true_range()
+        except Exception as e:
+            print("⚠️ ATR failed:", e)
+            df["ATR"] = np.nan
 
-        bb = BollingerBands(df["close"], window=bb_period, window_dev=bb_stddev)
-        df["BB_Mid"] = bb.bollinger_mavg()
-        df["BB_Upper"] = bb.bollinger_hband()
-        df["BB_Lower"] = bb.bollinger_lband()
+        # --- Fill any remaining NaNs rather than dropping ---
+        df.fillna(method="bfill", inplace=True)
+        df.fillna(method="ffill", inplace=True)
 
-        atr_calc = AverageTrueRange(df["high"], df["low"], df["close"], window=atr_period)
-        df["ATR"] = atr_calc.average_true_range()
-
-        return df.dropna()
+        print(f"✅ Indicators added → {len(df)} rows, {df.isna().sum().sum()} NaNs remaining")
+        return df
 
     # ============================================================
     # Snapshot Symbol Features
     # ============================================================
     def snapshot_symbol(self, symbol: str) -> pd.DataFrame:
         """
-        Fetches enough tick data → bars → indicators for a given symbol.
-        Auto-expands minutes so indicators like ATR(14) and EMA(200) have data.
+        Fetch enough market data → OHLC bars → indicators for a given symbol.
+        Uses ticks if available, else falls back to historical OHLC data (guaranteed).
         """
+        from datetime import datetime, timedelta
         atr_period = self.cfg.get("indicators", {}).get("atr_period", 14)
-        fetch_minutes = max(atr_period * 2, 30)  # 30 min or 2×ATR window
+        fetch_minutes = 720  # 12 hours of 1-minute data
 
-        tick_df = self.fetch_ticks(symbol, minutes=fetch_minutes)
-        bars = self.ticks_to_bars(tick_df)
 
-        # prevent ATR crash if dataset too short
+        df_ticks = pd.DataFrame()
+
+        # --- Try live ticks (using MT5 server time) ---
+        try:
+            info = mt5.symbol_info_tick(symbol)
+            if info:
+                now = datetime.fromtimestamp(info.time)
+                frm = now - timedelta(minutes=fetch_minutes)
+                ticks = mt5.copy_ticks_range(symbol, frm, now, mt5.COPY_TICKS_ALL)
+                if ticks is not None and len(ticks) > 0:
+                    df_ticks = pd.DataFrame(ticks)
+                    df_ticks["time"] = pd.to_datetime(df_ticks["time"], unit="s")
+                    df_ticks.set_index("time", inplace=True)
+                    print(f"✅ {symbol}: Live ticks fetched → {len(df_ticks)}")
+        except Exception as e:
+            print(f"⚠️ Tick fetch error: {e}")
+
+        # --- Fallback: historical OHLC bars ---
+        if df_ticks.empty:
+            try:
+                utc_from = datetime.now() - timedelta(days=5)
+                rates = mt5.copy_rates_from(symbol, mt5.TIMEFRAME_M1, utc_from, 5000)
+                if rates is not None and len(rates) > 0:
+                    df_ticks = pd.DataFrame(rates)
+                    df_ticks["time"] = pd.to_datetime(df_ticks["time"], unit="s")
+                    df_ticks.set_index("time", inplace=True)
+                    print(f"✅ {symbol}: Historical OHLC fetched → {len(df_ticks)} bars")
+                else:
+                    print(f"⚠️ No tick or OHLC data available for {symbol}.")
+            except Exception as e:
+                print(f"❌ Failed to fetch historical data: {e}")
+                return pd.DataFrame()
+
+        # --- Normalize columns for indicator generation ---
+        if "bid" in df_ticks.columns:
+            df_ticks.rename(columns={"bid": "close"}, inplace=True)
+        if "ask" in df_ticks.columns and "close" not in df_ticks.columns:
+            df_ticks.rename(columns={"ask": "close"}, inplace=True)
+        if "open" not in df_ticks.columns:
+            df_ticks["open"] = df_ticks["close"]
+        if "high" not in df_ticks.columns:
+            df_ticks["high"] = df_ticks["close"]
+        if "low" not in df_ticks.columns:
+            df_ticks["low"] = df_ticks["close"]
+        if "volume" not in df_ticks.columns:
+            df_ticks["volume"] = 0
+
+        bars = self.ticks_to_bars(df_ticks)
         if len(bars) < atr_period:
-            print(f"⚠️  Only {len(bars)} bars — not enough for ATR({atr_period}).")
+            print(f"⚠️ Only {len(bars)} bars — not enough for ATR({atr_period}).")
+
         feat = self.add_indicators(bars, self.cfg)
-        return feat.tail(5)
+        return feat
+
 
 
 # ================================================================

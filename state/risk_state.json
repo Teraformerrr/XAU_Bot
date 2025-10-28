@@ -1,0 +1,31 @@
+{
+  "paused": false,
+  "lot_scale": 1.0,
+  "hedge_lots_in_use": 0.0,
+  "timestamp": "2025-10-28T20:26:21",
+  "policy": {
+    "execution": {
+      "mode": "live",
+      "magic": 51001,
+      "max_retries": 2,
+      "default_slippage_pts": 100,
+      "heartbeat_pipe": "runtime/execution_heartbeat.json"
+    },
+    "engine": {
+      "bar_seconds": 60
+    },
+    "symbols": {
+      "metals": [
+        "XAUUSD.sd"
+      ]
+    },
+    "risk": {
+      "sl_atr_mult": 1.5,
+      "tp_atr_mult": 2.2
+    }
+  },
+  "memory": {
+    "hedge_keys": [],
+    "last_pause_signature": null
+  }
+}
