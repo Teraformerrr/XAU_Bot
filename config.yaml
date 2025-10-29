@@ -1,16 +1,34 @@
-# D:\XAU_Bot\config.yaml
+symbol: XAUUSD.sd
+interval: 60
+mode: mt5
+
 execution:
-  mode: live               # must be "live" for demo trading
-  magic: 51001
-  max_retries: 2
-  default_slippage_pts: 100
-  heartbeat_pipe: runtime/execution_heartbeat.json
+  sl_atr: 2.0           # initial SL = 2*ATR
+  tp_atr: 3.0           # initial TP = 3*ATR
+  be_trigger_atr: 1.0   # move to BE when profit >= 1*ATR
+  be_offset_pts: 50     # BE SL = entry +/- 50 points
+  flip_on_opposite: true
+  atr_period: 14
+  atr_lookback: 200
+  timeframe: TIMEFRAME_M5
+  trail_atr: 0.5    # maintain SL = (price - 0.5xATR)
+  flip_on_opposite: true # already present
 
-engine:
-  bar_seconds: 60
+  hedge:
+    enabled: true
+    dd_pct_trigger: 20.0
+    lot_per_hedge: 0.5
+    max_hedges: 7
 
-symbols:
-  metals: ["XAUUSD.sd"] 
-risk:
-  sl_atr_mult: 1.5
-  tp_atr_mult: 2.2
+decision:
+  mode: dynamic
+  dynamic:
+    base: 0.90     # base target confidence in normal conditions
+    min: 0.80      # never require lower than this (calm markets)
+    max: 0.95      # never require higher than this (wild markets)
+    vol_ref: 0.15  # reference volatility where base applies
+    slope: 0.30    # how fast threshold increases with vol
+
+decision_thresholds:
+  buy: 0.70
+  sell: 0.30

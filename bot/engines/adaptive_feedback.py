@@ -2,7 +2,7 @@ import json
 import logging
 from datetime import datetime
 from pathlib import Path
-from bot.scheduler.vol_sync import VolatilitySynchronizer
+from bot.engines.volatility_sync import VolatilitySynchronizer
 
 logger = logging.getLogger(__name__)
 
@@ -35,7 +35,10 @@ class AdaptiveFeedback:
 
     def update(self, symbol: str, win: bool, conf: float):
         """Apply feedback weighted by volatility."""
-        vol = self.vol_sync.get_volatility(default=0.1)
+        vol = self.vol_sync.get(symbol)
+        if vol is None:
+            vol = 0.1
+
         volatility_factor = max(0.05, min(1.0 / (1 + 5 * vol), 1.0))
         adj_alpha = self.alpha_base * volatility_factor
 

@@ -144,6 +144,39 @@ class AdaptiveFeedback:
             "success_w": round(success_w, 4),
             "failure_w": round(failure_w, 4),
         })
+
+        def update(self, symbol, win, confidence_value, volatility_value):
+            """
+            Updates Bayesian priors based on trade outcome, confidence, and volatility.
+            """
+            import datetime
+
+            # Decay existing priors
+            self.state[symbol]["a"] *= self.decay
+            self.state[symbol]["b"] *= self.decay
+
+            # Update based on outcome
+            if win:
+                self.state[symbol]["a"] += confidence_value * self.k
+            else:
+                self.state[symbol]["b"] += confidence_value * self.k
+
+            # Save update
+            self.save_state()
+
+            # Log entry
+            print(
+                f"📈 AdaptiveFeedback updated | {symbol} | win={win} | conf={confidence_value:.3f} | vol={volatility_value:.3f} | a={self.state[symbol]['a']:.1f}, b={self.state[symbol]['b']:.1f}")
+            return {
+                "timestamp": datetime.datetime.utcnow().isoformat(),
+                "symbol": symbol,
+                "win": win,
+                "confidence": confidence_value,
+                "volatility": volatility_value,
+                "a": self.state[symbol]["a"],
+                "b": self.state[symbol]["b"]
+            }
+
         logger.info("📈 AdaptiveFeedback updated priors | %s | win=%s | conf=%.3f | a=%.1f b=%.1f",
                     symbol, is_win, conf,
                     self.state[symbol]["prior"]["a"], self.state[symbol]["prior"]["b"])
