@@ -1,5 +1,5 @@
 symbol: XAUUSD.sd
-interval: 60
+interval: 120
 mode: mt5
 
 execution:

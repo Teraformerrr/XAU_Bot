@@ -36,7 +36,7 @@ config = load_yaml_config(CONFIG_PATH)
 logger.info("✅ YAML config loaded successfully")
 
 symbol   = config.get("symbol", "XAUUSD.sd")
-interval = int(config.get("interval", 60))     # seconds
+interval = int(config.get("interval", 120))     # seconds
 mode     = config.get("mode", "mt5")
 
 logger.info(f"Symbol : {symbol} | Interval : {interval}s | Mode : {mode}")
@@ -76,19 +76,19 @@ def run_scheduler():
         try:
 
             # === STEP 0: Trade Lock Check (prevents new trades while any are open) ===
-            # open_positions = pm.get_open_positions(symbol)
-            # if open_positions:
-            #     if not position_lock:
-            #         position_lock = True
-            #         logger.info(f"🛑 Skipped → open position(s) detected for {symbol}. Trade lock activated.")
-            #     else:
-            #         logger.info(f"🔒 Trade lock active → waiting for existing position(s) to close.")
-            #     time.sleep(30)
-            #     continue
-            # else:
-            #     if position_lock:
-            #         logger.info(f"✅ All positions closed → trade lock released.")
-            #         position_lock = False
+            open_positions = pm.get_open_positions(symbol)
+            if open_positions:
+                if not position_lock:
+                    position_lock = True
+                    logger.info(f"🤖 Skipped → open position(s) detected for {symbol}. Logging the trade for Model running.")
+                else:
+                    logger.info(f"🤖 Trade Learning → waiting for existing position(s) to close.")
+                time.sleep(120)
+                continue
+            else:
+                if position_lock:
+                    logger.info(f"✅ All positions closed → This trade was logged to learn by the XModel.")
+                    position_lock = False
 
             # === STEP 1: Compute AI confidence & volatility ===
             confidence = ai_signal_router.compute_confidence(symbol)
@@ -223,8 +223,8 @@ def run_scheduler():
                     return  # safely exit today's session
 
                 # === Continue scheduler ===
-                logger.info("🕒 Sleeping 60s before next cycle …")
-                time.sleep(60)
+                logger.info("🕒 Back check for trade running for 120s before next cycle …")
+                time.sleep(120)
 
             except KeyboardInterrupt:
                 logger.warning("🧭 Scheduler terminated manually.")
