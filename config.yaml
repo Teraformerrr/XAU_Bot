@@ -31,4 +31,4 @@ decision:
 
 decision_thresholds:
   buy: 0.70
-  sell: 0.30
+  sell: 0.48

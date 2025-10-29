@@ -1,45 +1,74 @@
 """
 policy_bridge.py
-Phase 5 – Policy Decision Bridge
-Connects AI/Rule-based signal logic with the Scheduler.
+────────────────────────────────────────────────────────────
+Bridge between Bayesian policy and AI signal router.
+This ensures trade direction (BUY/SELL/HOLD) decisions
+are consistent with thresholds and volatility logic.
+────────────────────────────────────────────────────────────
 """
 
-import random
-from datetime import datetime
-from loguru import logger
+import logging
+from bot.engines.bayes_policy import BayesianPolicy
+
+# Configure logger for this module
+logger = logging.getLogger(__name__)
 
 
-def get_policy_decision(symbol: str) -> dict:
+class PolicyBridge:
     """
-    Returns a policy decision for the given symbol.
-    This is a placeholder AI logic (demo mode).
+    Bridge between AI router outputs and Bayesian policy thresholds.
+    Handles decision-making consistency based on model confidence,
+    volatility, and detected market drift.
     """
 
-    # Simulate model confidence and volatility
-    confidence = round(random.uniform(0.3, 0.95), 2)
-    volatility = round(random.uniform(0.05, 0.4), 2)
+    def __init__(self):
+        # Initialize the underlying BayesianPolicy engine
+        self.policy = BayesianPolicy()
+        logger.info("✅ PolicyBridge initialized")
 
-    # Demo: occasionally force a trade
-    forced = random.random() > 0.65
-    execute = forced or confidence > 0.85
+    def decide(self, confidence: float, volatility: float, drift: bool = False):
+        """
+        Forward confidence + volatility through BayesianPolicy → decision.
+        Returns a context dictionary used by the higher-level scheduler.
+        """
+        try:
+            decision = self.policy.decide(confidence, volatility, drift)
+            logger.info(
+                f"📊 Policy Decision → conf={confidence:.3f} | vol={volatility:.3f} | "
+                f"drift={drift} | thresholds=({decision['sell_threshold']:.3f}, "
+                f"{decision['buy_threshold']:.3f}) | action={decision['action']}"
+            )
+            return decision
 
-    action = "BUY" if random.random() > 0.5 else "SELL"
-    reason = "forced-demo" if forced else "demo-idle"
+        except Exception as e:
+            logger.exception(f"❌ PolicyBridge decision error: {e}")
+            return {
+                "confidence": confidence,
+                "volatility": volatility,
+                "action": "HOLD",
+                "buy_threshold": 0.80,
+                "sell_threshold": 0.50,
+                "drift": drift,
+            }
 
-    decision = {
-        "symbol": symbol,
-        "execute": True,  # force trade
-        "action": random.choice(["BUY", "SELL"]),
-        "confidence": round(random.uniform(0.8, 0.95), 2),
-        "volatility": round(random.uniform(0.1, 0.3), 2),
-        "reason": "forced-demo",
-        "timestamp": datetime.utcnow().isoformat(),
-    }
+    def run(self):
+        """
+        Wrapper for test and compatibility.
+        Loads sample values and calls decide().
+        This method allows standalone execution during testing.
+        """
+        logger.info("🔗 PolicyBridge.run() called – using default test inputs.")
+        confidence = 0.6
+        volatility = 0.1
+        drift = False
 
-    logger.debug(f"Policy Bridge Decision → {decision}")
-    return decision
+        result = self.decide(confidence, volatility, drift)
+        logger.info(f"📤 PolicyBridge.run() → {result}")
+        return result
 
 
-# Standalone test
+# Optional: allow direct run from command line
 if __name__ == "__main__":
-    print(get_policy_decision("XAUUSD"))
+    bridge = PolicyBridge()
+    output = bridge.run()
+    print("PolicyBridge Output:", output)

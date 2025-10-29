@@ -68,7 +68,7 @@ sec = SmartExposureController() if SmartExposureController else None
 
 
 
-# ── Main Loop ───────────────────────────────────────────────────────────────
+#── Main Loop ───────────────────────────────────────────────────────────────
 def run_scheduler():
     logger.info("🕒 Scheduler started – Live Bridge Integration active")
     position_lock = False
@@ -76,19 +76,19 @@ def run_scheduler():
         try:
 
             # === STEP 0: Trade Lock Check (prevents new trades while any are open) ===
-            open_positions = pm.get_open_positions(symbol)
-            if open_positions:
-                if not position_lock:
-                    position_lock = True
-                    logger.info(f"🛑 Skipped → open position(s) detected for {symbol}. Trade lock activated.")
-                else:
-                    logger.info(f"🔒 Trade lock active → waiting for existing position(s) to close.")
-                time.sleep(30)
-                continue
-            else:
-                if position_lock:
-                    logger.info(f"✅ All positions closed → trade lock released.")
-                    position_lock = False
+            # open_positions = pm.get_open_positions(symbol)
+            # if open_positions:
+            #     if not position_lock:
+            #         position_lock = True
+            #         logger.info(f"🛑 Skipped → open position(s) detected for {symbol}. Trade lock activated.")
+            #     else:
+            #         logger.info(f"🔒 Trade lock active → waiting for existing position(s) to close.")
+            #     time.sleep(30)
+            #     continue
+            # else:
+            #     if position_lock:
+            #         logger.info(f"✅ All positions closed → trade lock released.")
+            #         position_lock = False
 
             # === STEP 1: Compute AI confidence & volatility ===
             confidence = ai_signal_router.compute_confidence(symbol)
@@ -98,7 +98,7 @@ def run_scheduler():
             decision = ai_signal_router.make_decision(confidence, vol=latest_volatility, mode="static")
 
             # 🧩 Step 3: Apply confidence gates
-            min_conf, max_conf = 0.70, 0.30  # your thresholds
+            min_conf, max_conf = 0.80, 0.50  # your thresholds
 
             buy_ok = (confidence >= min_conf)
             sell_ok = (confidence <= max_conf)
@@ -113,8 +113,8 @@ def run_scheduler():
             # ── NEW: static confidence gate (BUY ≥ min_conf, SELL ≤ 1 - min_conf)
             dec_cfg = config.get("decision", {}) if isinstance(config, dict) else {}
             mode = (dec_cfg.get("mode") or "static").lower()
-            min_conf = float(dec_cfg.get("min_conf", 0.70))
-            max_conf = float(dec_cfg.get("max_conf", 0.30))
+            min_conf = float(dec_cfg.get("min_conf", 0.80))
+            max_conf = float(dec_cfg.get("max_conf", 0.50))
             buy_ok = (confidence >= min_conf)
             sell_ok = (confidence <= max_conf)
 
@@ -223,8 +223,8 @@ def run_scheduler():
                     return  # safely exit today's session
 
                 # === Continue scheduler ===
-                logger.info("🕒 Sleeping 30s before next cycle …")
-                time.sleep(30)
+                logger.info("🕒 Sleeping 60s before next cycle …")
+                time.sleep(60)
 
             except KeyboardInterrupt:
                 logger.warning("🧭 Scheduler terminated manually.")

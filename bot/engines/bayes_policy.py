@@ -15,9 +15,9 @@ class BayesianPolicy:
                 return json.load(f)
         except FileNotFoundError:
             policy = {
-                "base_buy": 0.55,
-                "base_sell": 0.45,
-                "vol_sensitivity": 0.1,
+                "base_buy": 0.65,
+                "base_sell": 0.50,
+                "vol_sensitivity": 0.08,
                 "drift_penalty": 0.05
             }
             with open(self.config_path, "w") as f:

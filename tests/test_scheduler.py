@@ -1,4 +1,4 @@
-from bot.core.scheduler import ContinuousScheduler
+sfrom bot.core.scheduler import ContinuousScheduler
 
 def simple_task():
     print("Running test cycle...")

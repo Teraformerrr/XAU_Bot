@@ -93,8 +93,8 @@ class AISignalRouter:
         """
 
         # Base thresholds
-        buy_th = 0.70
-        sell_th = 0.25
+        buy_th = 0.80
+        sell_th = 0.50
 
         if mode == "dynamic":
             # volatility-aware adjustment: tighter during calm, stricter when volatile
